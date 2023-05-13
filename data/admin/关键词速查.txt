@@ -1,0 +1,4 @@
+class 类型 类
+interface 类型 接口
+int 类型 整数
+Integer 类型 包装整数
