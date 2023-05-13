@@ -57,9 +57,7 @@ public class Main extends JFrame {
 
             if (value instanceof FontUIResource) {
                 UIManager.put(key, fontRes);
-
             }
-
         }
 
     }
