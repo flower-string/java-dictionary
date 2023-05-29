@@ -1,31 +1,27 @@
 package org.example.pages;
 
-/**
- * author 2107090411 刘敬超
- * version 1.0.0
- **/
-
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import org.example.components.WordDialog;
-import org.example.tools.BookHandler;
 import org.example.components.Word;
+import org.example.components.WordDialog;
+import org.example.utils.BookHandler;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
+/**
+ * author 2107090411 刘敬超
+ * version 1.0.0
+ **/
 
 public class VocabularyBookPanel extends JPanel {
-    private JTextField newWordField;
-    private JTextField newPartOfSpeechField;
-    private JTextField newDefinitionField;
     private JPanel wordListArea;
     // 用于展示单词
     private JComboBox<String> bookList;
     // 映射，用来存单词本和单词
-    private final HashMap<String, ArrayList<Word>> books;
     private final String username;
     private final BookHandler bookHandler;
 
@@ -33,8 +29,7 @@ public class VocabularyBookPanel extends JPanel {
         this.username = username;
         setLayout(new BorderLayout());
 
-        books = new HashMap<>();
-        bookHandler = new BookHandler(books);
+        bookHandler = new BookHandler(new HashMap<>());
         bookHandler.loadBooks(username);
         display();
         updateWordList();
@@ -50,7 +45,7 @@ public class VocabularyBookPanel extends JPanel {
 
         String selectedBook = (String) bookList.getSelectedItem();
         if (selectedBook != null) {
-            for (Word word : books.get(selectedBook)) {
+            for (Word word : bookHandler.getBooks().get(selectedBook)) {
                 JPanel wordPanel = new JPanel();
                 int wordPanelHeight = 50;
                 wordPanel.setMinimumSize(new Dimension(wordListArea.getWidth(), wordPanelHeight));
@@ -83,7 +78,7 @@ public class VocabularyBookPanel extends JPanel {
 
                 JButton deleteButton = new JButton("删除");
                 deleteButton.addActionListener(e -> {
-                    books.get(selectedBook).remove(word);
+                    bookHandler.getBooks().get(selectedBook).remove(word);
                     updateWordList();
                 });
                 buttonPanel.add(deleteButton);
@@ -98,16 +93,25 @@ public class VocabularyBookPanel extends JPanel {
 
     private void display() {
         JPanel topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
+        topPanel.setLayout(new BorderLayout());
+
+        JPanel topButtons = new JPanel();
+        topButtons.setLayout(new FlowLayout(FlowLayout.LEFT));
+        topPanel.add(topButtons, BorderLayout.NORTH);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
+
 
         JButton themeButton = new JButton("切换主题");
-        topPanel.add(themeButton);
+        topButtons.add(themeButton);
         themeButton.addActionListener(e -> {
             try {
                 if (FlatLaf.isLafDark()) {
-                    FlatLightLaf.install();
+                    FlatLightLaf.setup();
                 } else {
-                    FlatDarkLaf.install();
+                    FlatDarkLaf.setup();
                 }
                 SwingUtilities.updateComponentTreeUI(this);
             } catch (Exception ex) {
@@ -115,88 +119,75 @@ public class VocabularyBookPanel extends JPanel {
             }
         });
 
+        JButton addButton = new JButton("添加单词");
+        addButton.addActionListener(e -> {
+            String selectedBook = (String) bookList.getSelectedItem();
 
-        bookList = new JComboBox<>();
-        for (String bookName : books.keySet()) {
-            bookList.addItem(bookName);
-        }
-        bookList.addActionListener(e -> updateWordList());
-        topPanel.add(bookList);
-
-        JButton newBookButton = new JButton("新建单词本");
-        newBookButton.addActionListener(e -> {
-            String newBook = JOptionPane.showInputDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "输入新单词本名称");
-            if (newBook != null && !newBook.isEmpty()) {
-                if (books.containsKey(newBook)) {
-                    JOptionPane.showMessageDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "已存在同名单词本");
-                } else {
-                    books.put(newBook, new ArrayList<>());
-                    bookList.addItem(newBook);
-                    bookHandler.saveBooks(username);
-                }
+            if (selectedBook != null) {
+                WordDialog dialog = new WordDialog("添加单词", new Word("", "", ""));
+                dialog.addOKListener(e1 -> {
+                    String newWord = dialog.wordField.getText();
+                    String newPartOfSpeech = dialog.partOfSpeechField.getText();
+                    String newDefinition = dialog.definitionField.getText();
+                    if (!newWord.isEmpty() && !newPartOfSpeech.isEmpty() && !newDefinition.isEmpty()) {
+                        bookHandler.getBooks().get(selectedBook).add(new Word(newWord, newPartOfSpeech, newDefinition));
+                        bookHandler.saveBooks(username);
+                        updateWordList();
+                        dialog.wordField.setText("");
+                        dialog.partOfSpeechField.setText("");
+                        dialog.definitionField.setText("");
+                        dialog.dispose();
+                    }
+                });
             }
         });
-        topPanel.add(newBookButton);
+        topButtons.add(addButton);
+
+        JButton gameButton = new JButton("小游戏");
+        gameButton.addActionListener(e -> new VocabularyGame(username, Objects.requireNonNull(bookList.getSelectedItem()).toString()));
+        topButtons.add(gameButton);
 
         add(topPanel, BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
 
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(3, 2));
-        inputPanel.add(new JLabel("单词"));
-        newWordField = new JTextField(10);
-        inputPanel.add(newWordField);
-        inputPanel.add(new JLabel("词性"));
-        newPartOfSpeechField = new JTextField(10);
-        inputPanel.add(newPartOfSpeechField);
-        inputPanel.add(new JLabel("释义"));
-        newDefinitionField = new JTextField(10);
-        inputPanel.add(newDefinitionField);
-        centerPanel.add(inputPanel, BorderLayout.NORTH);
-
         add(centerPanel, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
-        JButton addButton = new JButton("添加");
-        addButton.addActionListener(e -> {
-            String selectedBook = (String) bookList.getSelectedItem();
-            if (selectedBook != null) {
-                String newWord = newWordField.getText();
-                String newPartOfSpeech = newPartOfSpeechField.getText();
-                String newDefinition = newDefinitionField.getText();
-                if (!newWord.isEmpty() && !newPartOfSpeech.isEmpty() && !newDefinition.isEmpty()) {
-                    books.get(selectedBook).add(new Word(newWord, newPartOfSpeech, newDefinition));
+        bookList = new JComboBox<>();
+        for (String bookName : bookHandler.getBooks().keySet()) {
+            bookList.addItem(bookName);
+        }
+        bookList.addActionListener(e -> updateWordList());
+        buttonPanel.add(bookList);
+
+        JButton newBookButton = new JButton("新建单词本");
+        newBookButton.addActionListener(e -> {
+            String newBook = JOptionPane.showInputDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "输入新单词本名称");
+            if (newBook != null && !newBook.isEmpty()) {
+                if (bookHandler.getBooks().containsKey(newBook)) {
+                    JOptionPane.showMessageDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "已存在同名单词本");
+                } else {
+                    bookHandler.getBooks().put(newBook, new ArrayList<>());
+                    bookList.addItem(newBook);
                     bookHandler.saveBooks(username);
-                    updateWordList();
-                    newWordField.setText("");
-                    newPartOfSpeechField.setText("");
-                    newDefinitionField.setText("");
                 }
             }
         });
-        buttonPanel.add(addButton);
+        buttonPanel.add(newBookButton);
 
-        wordListArea = new JPanel();
-        wordListArea.setLayout(new BoxLayout(wordListArea, BoxLayout.Y_AXIS));
-
-        wordListArea.setLayout(new BorderLayout());
-        JPanel wordPanelContainer = new JPanel();
-        wordPanelContainer.setLayout(new BoxLayout(wordPanelContainer, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(wordPanelContainer);
-        wordListArea.add(scrollPane, BorderLayout.CENTER);
-        centerPanel.add(wordListArea);
+        JTextField searchField = new JTextField(10);
+        buttonPanel.add(searchField);
 
         JButton searchButton = new JButton("查询");
         searchButton.addActionListener(e -> {
             String selectedBook = (String) bookList.getSelectedItem();
             if (selectedBook != null) {
-                String searchWord = JOptionPane.showInputDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "输入要查询的单词");
-                if (searchWord != null && !searchWord.isEmpty()) {
+                String searchWord = searchField.getText();
+                if (!searchWord.isEmpty()) {
                     boolean found = false;
                     ArrayList<Word> result = new ArrayList<>();
-                    for (Word word : books.get(selectedBook)) {
+                    for (Word word : bookHandler.getBooks().get(selectedBook)) {
                         if (word.word.equals(searchWord)) {
                             found = true;
                             result.add(word);
@@ -216,12 +207,17 @@ public class VocabularyBookPanel extends JPanel {
         });
         buttonPanel.add(searchButton);
 
-        JButton gameButton = new JButton("小游戏");
-        gameButton.addActionListener(e -> {
-            new VocabularyGame(username, bookList.getSelectedItem().toString());
-        });
-        buttonPanel.add(gameButton);
+//        add(buttonPanel, BorderLayout.SOUTH);
 
-        add(buttonPanel, BorderLayout.SOUTH);
+        wordListArea = new JPanel();
+        wordListArea.setLayout(new BoxLayout(wordListArea, BoxLayout.Y_AXIS));
+
+        wordListArea.setLayout(new BorderLayout());
+        JPanel wordPanelContainer = new JPanel();
+        wordPanelContainer.setLayout(new BoxLayout(wordPanelContainer, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane(wordPanelContainer);
+        wordListArea.add(scrollPane, BorderLayout.CENTER);
+        centerPanel.add(wordListArea);
     }
+
 }
