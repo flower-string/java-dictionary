@@ -1,6 +1,7 @@
 package org.example.pages;
 
 
+import org.example.utils.Cache;
 import org.example.utils.SceneManager;
 
 import javax.swing.*;
@@ -41,8 +42,9 @@ public class LoginPage extends JPanel {
         loginButton.setOpaque(true);
 
         loginButton.addActionListener(e -> {
-            String username = usernameField.getText();
-            if(username.trim().isEmpty()) return;
+            Cache.username = usernameField.getText();
+            if(Cache.username.trim().isEmpty()) return;
+            System.out.println("用户 " + Cache.username + " 登录成功");
             SceneManager.getInstance().changeScene("main");
         });
         gbc.gridx = 0;

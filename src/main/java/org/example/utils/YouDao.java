@@ -19,7 +19,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-
+// 这里是有道词典官网给出的范例，我做了简单的修改，对外暴露了一个查询方法，返回查询结果
 public class YouDao {
 
     private static YouDao instance = null;

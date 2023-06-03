@@ -7,6 +7,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import org.example.components.Word;
 import org.example.components.WordDialog;
 import org.example.utils.BookHandler;
+import org.example.utils.Cache;
 import org.example.utils.SceneManager;
 import org.example.utils.YouDao;
 
@@ -26,15 +27,16 @@ public class MainPage extends JPanel {
     // 用于展示单词
     private JComboBox<String> bookList;
     // 映射，用来存单词本和单词
-    private final String username;
     private final BookHandler bookHandler;
 
-    public MainPage(String username) {
-        this.username = username;
+    public MainPage() {
         setLayout(new BorderLayout());
-
         bookHandler = new BookHandler(new HashMap<>());
-        bookHandler.loadBooks(username);
+    }
+
+    // 生命周期函数，在该页面被唤醒的时候调用
+    public void show() {
+        bookHandler.loadBooks(Cache.username);
         display();
         updateWordList();
     }
@@ -74,7 +76,7 @@ public class MainPage extends JPanel {
 
                         // 关闭对话框并更新单词列表
                         wordDialog.dispose();
-                        bookHandler.saveBooks(username);
+                        bookHandler.saveBooks(Cache.username);
                         updateWordList();
                     });
                 });
@@ -147,7 +149,7 @@ public class MainPage extends JPanel {
                     String newDefinition = dialog.definitionField.getText();
                     if (!newWord.isEmpty() && !newPartOfSpeech.isEmpty() && !newDefinition.isEmpty()) {
                         bookHandler.getBooks().get(selectedBook).add(new Word(newWord, newPartOfSpeech, newDefinition));
-                        bookHandler.saveBooks(username);
+                        bookHandler.saveBooks(Cache.username);
                         updateWordList();
                         dialog.wordField.setText("");
                         dialog.partOfSpeechField.setText("");
@@ -168,7 +170,7 @@ public class MainPage extends JPanel {
                 } else {
                     bookHandler.getBooks().put(newBook, new ArrayList<>());
                     bookList.addItem(newBook);
-                    bookHandler.saveBooks(username);
+                    bookHandler.saveBooks(Cache.username);
                 }
             }
         });

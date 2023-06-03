@@ -6,6 +6,8 @@ package org.example.pages;
  **/
 
 import org.example.components.Word;
+import org.example.utils.Cache;
+import org.example.utils.SceneManager;
 import org.example.utils.VocabularyReader;
 
 import javax.swing.*;
@@ -23,13 +25,11 @@ public class GamePage extends JPanel {
         setLayout(new BorderLayout());
     }
 
-    public void init(String username ,String bookname) {
+    public void show() {
         this.display();
-        this.vocabulary = VocabularyReader.readVocabulary(username, bookname);
+        this.vocabulary = VocabularyReader.readVocabulary(Cache.username, "cet");
         // 显示随机单词
         showRandomWord();
-        this.setVisible(true);
-
     }
 
     private void showRandomWord() {
@@ -78,6 +78,7 @@ public class GamePage extends JPanel {
             showRandomWord();
             inputField.setText("");
         });
+        closeButton.addActionListener(e -> SceneManager.getInstance().changeScene("main"));
     }
 
 }

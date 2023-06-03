@@ -22,7 +22,7 @@ public class Main extends JFrame {
         // 设置场景
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.addScene("login", new LoginPage());
-        sceneManager.addScene("main", new MainPage("admin"));
+        sceneManager.addScene("main", new MainPage());
         sceneManager.addScene("game", new GamePage());
         sceneManager.changeScene("login");
     }
@@ -30,5 +30,4 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::new);
     }
-
 }

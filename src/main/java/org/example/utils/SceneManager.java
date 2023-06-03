@@ -9,10 +9,10 @@ import java.util.HashMap;
  * version 1.0.0
  **/
 
-// 场景管理器, 用于切换页面
+// 场景管理器, 用于切换页面，使用单例模式
 public class SceneManager extends JFrame {
     private static SceneManager instance = null;
-    private HashMap<String, JPanel> scenes = new HashMap<>();
+    private final HashMap<String, JPanel> scenes = new HashMap<>();
 
     private JPanel activeScene = null;
     private SceneManager() {
@@ -34,6 +34,7 @@ public class SceneManager extends JFrame {
         System.out.println("切换场景为：" + name);
         getContentPane().removeAll();
         add(this.getScene(name));
+        this.getScene(name).show();
         revalidate();
         repaint();
     }
