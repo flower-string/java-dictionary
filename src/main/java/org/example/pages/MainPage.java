@@ -1,23 +1,27 @@
 package org.example.pages;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import org.example.components.Word;
 import org.example.components.WordDialog;
 import org.example.utils.BookHandler;
+import org.example.utils.SceneManager;
+import org.example.utils.YouDao;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
+
 /**
  * author 2107090411 刘敬超
  * version 1.0.0
  **/
 
-public class VocabularyBookPanel extends JPanel {
+public class MainPage extends JPanel {
     private JPanel wordListArea;
     // 用于展示单词
     private JComboBox<String> bookList;
@@ -25,7 +29,7 @@ public class VocabularyBookPanel extends JPanel {
     private final String username;
     private final BookHandler bookHandler;
 
-    public VocabularyBookPanel(String username) {
+    public MainPage(String username) {
         this.username = username;
         setLayout(new BorderLayout());
 
@@ -103,21 +107,33 @@ public class VocabularyBookPanel extends JPanel {
         buttonPanel.setLayout(new FlowLayout());
         topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-
-        JButton themeButton = new JButton("切换主题");
-        topButtons.add(themeButton);
-        themeButton.addActionListener(e -> {
+        JComboBox<String> themeComboBox = new JComboBox<>(new String[]{"Flat Light", "Flat Dark", "Flat IntelliJ", "Flat Darcula"});
+        topButtons.add(themeComboBox);
+        themeComboBox.addActionListener(e -> {
+            String selectedTheme = (String) themeComboBox.getSelectedItem();
             try {
-                if (FlatLaf.isLafDark()) {
-                    FlatLightLaf.setup();
-                } else {
-                    FlatDarkLaf.setup();
+                if (selectedTheme != null) {
+                    switch (selectedTheme) {
+                        case "Flat Light":
+                            FlatLightLaf.setup();
+                            break;
+                        case "Flat Dark":
+                            FlatDarkLaf.setup();
+                            break;
+                        case "Flat IntelliJ":
+                            FlatIntelliJLaf.setup();
+                            break;
+                        case "Flat Darcula":
+                            FlatDarculaLaf.setup();
+                            break;
+                    }
                 }
                 SwingUtilities.updateComponentTreeUI(this);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
+
 
         JButton addButton = new JButton("添加单词");
         addButton.addActionListener(e -> {
@@ -143,8 +159,33 @@ public class VocabularyBookPanel extends JPanel {
         });
         topButtons.add(addButton);
 
+        JButton newBookButton = new JButton("新建单词本");
+        newBookButton.addActionListener(e -> {
+            String newBook = JOptionPane.showInputDialog(MainPage.this.getTopLevelAncestor(), "输入新单词本名称");
+            if (newBook != null && !newBook.isEmpty()) {
+                if (bookHandler.getBooks().containsKey(newBook)) {
+                    JOptionPane.showMessageDialog(MainPage.this.getTopLevelAncestor(), "已存在同名单词本");
+                } else {
+                    bookHandler.getBooks().put(newBook, new ArrayList<>());
+                    bookList.addItem(newBook);
+                    bookHandler.saveBooks(username);
+                }
+            }
+        });
+        topButtons.add(newBookButton);
+
+        JButton newSerachButton = new JButton("网络查询");
+        newSerachButton.addActionListener(e -> {
+            try {
+                String result = YouDao.getInstance().translate("interface", "英文", "中文");
+            } catch (IOException ex) {
+                System.out.println("查询失败");
+            }
+        });
+        topButtons.add(newSerachButton);
+
         JButton gameButton = new JButton("小游戏");
-        gameButton.addActionListener(e -> new VocabularyGame(username, Objects.requireNonNull(bookList.getSelectedItem()).toString()));
+        gameButton.addActionListener(e -> SceneManager.getInstance().changeScene("game"));
         topButtons.add(gameButton);
 
         add(topPanel, BorderLayout.NORTH);
@@ -160,21 +201,6 @@ public class VocabularyBookPanel extends JPanel {
         }
         bookList.addActionListener(e -> updateWordList());
         buttonPanel.add(bookList);
-
-        JButton newBookButton = new JButton("新建单词本");
-        newBookButton.addActionListener(e -> {
-            String newBook = JOptionPane.showInputDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "输入新单词本名称");
-            if (newBook != null && !newBook.isEmpty()) {
-                if (bookHandler.getBooks().containsKey(newBook)) {
-                    JOptionPane.showMessageDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "已存在同名单词本");
-                } else {
-                    bookHandler.getBooks().put(newBook, new ArrayList<>());
-                    bookList.addItem(newBook);
-                    bookHandler.saveBooks(username);
-                }
-            }
-        });
-        buttonPanel.add(newBookButton);
 
         JTextField searchField = new JTextField(10);
         buttonPanel.add(searchField);
@@ -198,16 +224,14 @@ public class VocabularyBookPanel extends JPanel {
                         for(Word word: result) {
                             endStr.append(word.toString()).append("\n");
                         }
-                        JOptionPane.showMessageDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "查询结果\n" + endStr);
+                        JOptionPane.showMessageDialog(MainPage.this.getTopLevelAncestor(), "查询结果\n" + endStr);
                     } else {
-                        JOptionPane.showMessageDialog(VocabularyBookPanel.this.getTopLevelAncestor(), "单词本中不包含该单词");
+                        JOptionPane.showMessageDialog(MainPage.this.getTopLevelAncestor(), "单词本中不包含该单词");
                     }
                 }
             }
         });
         buttonPanel.add(searchButton);
-
-//        add(buttonPanel, BorderLayout.SOUTH);
 
         wordListArea = new JPanel();
         wordListArea.setLayout(new BoxLayout(wordListArea, BoxLayout.Y_AXIS));
@@ -219,5 +243,4 @@ public class VocabularyBookPanel extends JPanel {
         wordListArea.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(wordListArea);
     }
-
 }

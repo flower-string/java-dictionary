@@ -11,28 +11,25 @@ import org.example.utils.VocabularyReader;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class VocabularyGame extends JFrame {
+public class GamePage extends JPanel {
     private JLabel wordLabel;
     private JTextField inputField;
     private String currentWord;
     private List<Word> vocabulary;
 
-    public VocabularyGame(String username ,String bookname) {
-        this.vocabulary = VocabularyReader.readVocabulary(username, bookname);
-        // 设置窗口标题和大小
-        setTitle("Vocabulary Game");
-        setSize(600, 200);
+    public GamePage() {
         setLayout(new BorderLayout());
+    }
 
+    public void init(String username ,String bookname) {
         this.display();
+        this.vocabulary = VocabularyReader.readVocabulary(username, bookname);
         // 显示随机单词
         showRandomWord();
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+
     }
 
     private void showRandomWord() {
@@ -77,7 +74,6 @@ public class VocabularyGame extends JFrame {
 
         // 为按钮添加事件监听器
         checkButton.addActionListener(e -> checkSpelling());
-        closeButton.addActionListener(e -> this.dispose());
         nextButton.addActionListener(e -> {
             showRandomWord();
             inputField.setText("");

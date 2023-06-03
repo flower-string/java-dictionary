@@ -1,6 +1,8 @@
 package org.example.pages;
 
 
+import org.example.utils.SceneManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -16,14 +18,6 @@ public class LoginPage extends JPanel {
     public LoginPage() {
         setLayout(new GridBagLayout());
         display();
-    }
-
-    public String getUsername() {
-        return usernameField.getText();
-    }
-
-    public void addLoginActionListener(ActionListener listener) {
-        loginButton.addActionListener(listener);
     }
 
     private void display() {
@@ -45,6 +39,12 @@ public class LoginPage extends JPanel {
         loginButton = new JButton("登录");
         loginButton.setFont(new Font("宋体", Font.PLAIN, 26));
         loginButton.setOpaque(true);
+
+        loginButton.addActionListener(e -> {
+            String username = usernameField.getText();
+            if(username.trim().isEmpty()) return;
+            SceneManager.getInstance().changeScene("main");
+        });
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;

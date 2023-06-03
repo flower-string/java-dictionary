@@ -1,13 +1,14 @@
 package org.example;
 
-import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
-import java.awt.*;
-import java.util.Enumeration;
-
-import com.formdev.flatlaf.FlatDarkLaf;
 import org.example.pages.LoginPage;
-import org.example.pages.VocabularyBookPanel;
+import org.example.pages.MainPage;
+import org.example.pages.GamePage;
+import org.example.utils.SceneManager;
+
+import javax.swing.*;
+import java.awt.*;
+
+import static org.example.utils.Theme.InitGlobalFont;
 
 /**
  * author 2107090411 刘敬超
@@ -15,50 +16,19 @@ import org.example.pages.VocabularyBookPanel;
  **/
 public class Main extends JFrame {
     public Main() {
-        super("flatlaf 单词本");
-        FlatDarkLaf.setup();
-        setLayout(new BorderLayout());
+        // 统一设置字体
+        InitGlobalFont(new Font("alias", Font.PLAIN, 20));
 
-        LoginPage loginPage = new LoginPage();
-        loginPage.addLoginActionListener(e -> {
-            // 这里可以添加验证用户名和密码的代码
-            String username = loginPage.getUsername();
-            if(username.trim().isEmpty()) return;
-            showVocabularyBookPanel(username);
-        });
-        add(loginPage, BorderLayout.CENTER);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 900);
-        setVisible(true);
-        InitGlobalFont(new Font("alias", Font.PLAIN, 24));  //统一设置字体
-    }
-
-    private void showVocabularyBookPanel(String username) {
-        getContentPane().removeAll();
-        add(new VocabularyBookPanel(username), BorderLayout.CENTER);
-        revalidate();
-        repaint();
+        // 设置场景
+        SceneManager sceneManager = SceneManager.getInstance();
+        sceneManager.addScene("login", new LoginPage());
+        sceneManager.addScene("main", new MainPage("admin"));
+        sceneManager.addScene("game", new GamePage());
+        sceneManager.changeScene("login");
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Main::new);
     }
 
-    private static void InitGlobalFont(Font font) {
-        FontUIResource fontRes = new FontUIResource(font);
-
-        for (Enumeration<Object> keys = UIManager.getDefaults().keys();
-
-             keys.hasMoreElements(); ) {
-            Object key = keys.nextElement();
-
-            Object value = UIManager.get(key);
-
-            if (value instanceof FontUIResource) {
-                UIManager.put(key, fontRes);
-            }
-        }
-
-    }
 }
