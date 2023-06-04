@@ -20,6 +20,5 @@ public class Theme {
                 UIManager.put(key, fontRes);
             }
         }
-
     }
 }

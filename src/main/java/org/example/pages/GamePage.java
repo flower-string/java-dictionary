@@ -25,6 +25,7 @@ public class GamePage extends JPanel {
         setLayout(new BorderLayout());
     }
 
+    @Override
     public void show() {
         this.display();
         this.vocabulary = VocabularyReader.readVocabulary(Cache.username, "cet");

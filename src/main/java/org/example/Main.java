@@ -17,7 +17,7 @@ import static org.example.utils.Theme.InitGlobalFont;
 public class Main extends JFrame {
     public Main() {
         // 统一设置字体
-        InitGlobalFont(new Font("alias", Font.PLAIN, 20));
+        InitGlobalFont(new Font("alias", Font.PLAIN, 22));
 
         // 设置场景
         SceneManager sceneManager = SceneManager.getInstance();

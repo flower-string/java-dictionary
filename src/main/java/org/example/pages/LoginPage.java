@@ -6,7 +6,6 @@ import org.example.utils.SceneManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 /**
  * author 2107090411 刘敬超
@@ -14,7 +13,6 @@ import java.awt.event.ActionListener;
  **/
 public class LoginPage extends JPanel {
     private JTextField usernameField;
-    private JButton loginButton;
 
     public LoginPage() {
         setLayout(new GridBagLayout());
@@ -37,7 +35,7 @@ public class LoginPage extends JPanel {
         usernameField.setFont(new Font("宋体", Font.PLAIN, 24));
         add(usernameField, gbc);
 
-        loginButton = new JButton("登录");
+        JButton loginButton = new JButton("登录");
         loginButton.setFont(new Font("宋体", Font.PLAIN, 26));
         loginButton.setOpaque(true);
 

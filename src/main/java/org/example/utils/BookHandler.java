@@ -11,20 +11,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class BookHandler {
-    private HashMap<String, ArrayList<Word>> books;
-
-    public BookHandler(HashMap<String, ArrayList<Word>> books) {
-        this.books = books;
-    }
-
-    public HashMap<String, ArrayList<Word>> getBooks() {
-        return books;
-    }
-
-    public void setBooks(HashMap<String, ArrayList<Word>> books) {
-        this.books = books;
-    }
-
     public void loadBooks(String username) {
         File dataDir = new File("data");
         if (!dataDir.exists()) dataDir.mkdir();
@@ -48,7 +34,7 @@ public class BookHandler {
             if (bookFile.isFile() && bookFile.getName().endsWith(".txt")) {
                 String bookName = bookFile.getName().substring(0, bookFile.getName().length() - 4);
                 ArrayList<Word> words = (ArrayList<Word>) VocabularyReader.readVocabulary(username, bookName);
-                books.put(bookName, words);
+                Cache.books.put(bookName, words);
             }
         }
     }
@@ -60,10 +46,10 @@ public class BookHandler {
         File userDir = new File(dataDir, username);
         if (!userDir.exists()) userDir.mkdir();
 
-        for (String bookName : books.keySet()) {
+        for (String bookName : Cache.books.keySet()) {
             File bookFile = new File(userDir, bookName + ".txt");
             try (FileWriter writer = new FileWriter(bookFile)) {
-                for (Word word : books.get(bookName)) {
+                for (Word word : Cache.books.get(bookName)) {
                     writer.write(word.word + " " + word.partOfSpeech + " " + word.definition + "\n");
                 }
             } catch (IOException ignored) {
