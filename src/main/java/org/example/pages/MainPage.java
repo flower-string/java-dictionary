@@ -14,7 +14,6 @@ import org.example.utils.YouDao;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -22,25 +21,24 @@ import java.util.ArrayList;
  * version 1.0.0
  **/
 
+// 主要页面
 public class MainPage extends JPanel {
     // 用于展示单词
     private JPanel wordListArea;
     private JComboBox<String> bookList;
-    private final BookHandler bookHandler;
 
     public MainPage() {
         setLayout(new BorderLayout());
-        bookHandler = new BookHandler();
     }
 
     // 生命周期函数，在该页面被唤醒的时候调用
     public void show() {
-        bookHandler.loadBooks(Cache.username);
+        BookHandler.loadBooks(Cache.username);
         display();
         updateWordList();
     }
 
-    private void updateWordList() {
+    public void updateWordList() {
         wordListArea.removeAll();
         wordListArea.setLayout(new BorderLayout());
         JPanel wordPanelContainer = new JPanel();
@@ -52,20 +50,6 @@ public class MainPage extends JPanel {
             for (Word word : Cache.books.get(selectedBook)) {
                 WordPanel wordPanel = new WordPanel(wordListArea.getWidth(), word);
                 wordPanelContainer.add(wordPanel);
-                wordPanel.addBtn1(e -> {
-                    WordDialog wordDialog = new WordDialog("修改单词", word);
-                    wordDialog.addOKListener(e1 -> {
-                        // 更新单词信息
-                        word.setWord(wordDialog.wordField.getText());
-                        word.setPartOfSpeech(wordDialog.partOfSpeechField.getText());
-                        word.setDefinition(wordDialog.definitionField.getText());
-
-                        // 关闭对话框并更新单词列表
-                        wordDialog.dispose();
-                        bookHandler.saveBooks(Cache.username);
-                        updateWordList();
-                    });
-                });
 
                 wordPanel.addBtn2(e -> {
                     Cache.books.get(selectedBook).remove(word);
@@ -95,7 +79,7 @@ public class MainPage extends JPanel {
         centerPanel.setLayout(new BorderLayout());
         add(centerPanel, BorderLayout.CENTER);
 
-        ThemeComboBox themeComboBox = new ThemeComboBox(new String[]{"Flat Light", "Flat Dark", "Flat IntelliJ", "Flat Darcula"});
+        ThemeComboBox themeComboBox = new ThemeComboBox();
         menu.add(themeComboBox);
 
         JButton addButton = new JButton("添加单词");
@@ -110,7 +94,7 @@ public class MainPage extends JPanel {
                     String newDefinition = dialog.definitionField.getText();
                     if (!newWord.isEmpty() && !newPartOfSpeech.isEmpty() && !newDefinition.isEmpty()) {
                         Cache.books.get(selectedBook).add(new Word(newWord, newPartOfSpeech, newDefinition));
-                        bookHandler.saveBooks(Cache.username);
+                        BookHandler.saveBooks(Cache.username);
                         updateWordList();
                         dialog.wordField.setText("");
                         dialog.partOfSpeechField.setText("");
@@ -131,7 +115,7 @@ public class MainPage extends JPanel {
                 } else {
                     Cache.books.put(newBook, new ArrayList<>());
                     bookList.addItem(newBook);
-                    bookHandler.saveBooks(Cache.username);
+                    BookHandler.saveBooks(Cache.username);
                 }
             }
         });

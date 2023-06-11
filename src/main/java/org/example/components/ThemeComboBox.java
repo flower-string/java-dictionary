@@ -12,9 +12,10 @@ import javax.swing.*;
  * author 2107090411 刘敬超
  * version 1.0.0
  **/
+// 主题切换按钮
 public class ThemeComboBox extends JComboBox {
-    public ThemeComboBox(Object[] items) {
-        super(items);
+    public ThemeComboBox() {
+        super(new String[]{"Flat Light", "Flat Dark", "Flat IntelliJ", "Flat Darcula"});
         this.addActionListener(e -> {
             String selectedTheme = (String) this.getSelectedItem();
             try {

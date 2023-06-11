@@ -11,6 +11,7 @@ import java.awt.*;
  * author 2107090411 刘敬超
  * version 1.0.0
  **/
+// 登录页
 public class LoginPage extends JPanel {
     private JTextField usernameField;
 

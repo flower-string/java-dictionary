@@ -7,11 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
+// 用于操作单词本
 public class BookHandler {
-    public void loadBooks(String username) {
+    public static void loadBooks(String username) {
         File dataDir = new File("data");
         if (!dataDir.exists()) dataDir.mkdir();
 
@@ -33,13 +33,13 @@ public class BookHandler {
         for (File bookFile : Objects.requireNonNull(userDir.listFiles())) {
             if (bookFile.isFile() && bookFile.getName().endsWith(".txt")) {
                 String bookName = bookFile.getName().substring(0, bookFile.getName().length() - 4);
-                ArrayList<Word> words = (ArrayList<Word>) VocabularyReader.readVocabulary(username, bookName);
+                ArrayList<Word> words = (ArrayList<Word>) WordRender.readVocabulary(username, bookName);
                 Cache.books.put(bookName, words);
             }
         }
     }
 
-    public void saveBooks(String username) {
+    public static void saveBooks(String username) {
         File dataDir = new File("data");
         if (!dataDir.exists()) dataDir.mkdir();
 

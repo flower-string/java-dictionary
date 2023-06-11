@@ -8,13 +8,14 @@ package org.example.pages;
 import org.example.components.Word;
 import org.example.utils.Cache;
 import org.example.utils.SceneManager;
-import org.example.utils.VocabularyReader;
+import org.example.utils.WordRender;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+// 小游戏界面
 public class GamePage extends JPanel {
     private JLabel wordLabel;
     private JTextField inputField;
@@ -28,7 +29,7 @@ public class GamePage extends JPanel {
     @Override
     public void show() {
         this.display();
-        this.vocabulary = VocabularyReader.readVocabulary(Cache.username, "cet");
+        this.vocabulary = WordRender.readVocabulary(Cache.username, "cet");
         // 显示随机单词
         showRandomWord();
     }

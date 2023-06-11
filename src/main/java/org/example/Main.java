@@ -14,6 +14,7 @@ import static org.example.utils.Theme.InitGlobalFont;
  * author 2107090411 刘敬超
  * version 1.0.0
  **/
+// 程序入口
 public class Main extends JFrame {
     public Main() {
         // 统一设置字体

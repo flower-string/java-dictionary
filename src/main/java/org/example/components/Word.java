@@ -4,6 +4,7 @@ package org.example.components;
  * author 2107090411 刘敬超
  * version 1.0.0
  **/
+// 单词类，包含单词本身，词性和释义
 public class Word {
     public String word;
     public String partOfSpeech;

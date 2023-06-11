@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
  * author 2107090411 刘敬超
  * version 1.0.0
  **/
+
+// 单词对话框，用于新增和修改单词的弹框
 public class WordDialog extends JDialog {
     private final JButton okButton;
     public JTextField wordField;

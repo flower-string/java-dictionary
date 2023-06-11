@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VocabularyReader {
+// 读取单词本的内容，返回一个单词列表
+public class WordRender {
     public static List<Word> readVocabulary(String username, String bookname) {
         List<Word> vocabulary = new ArrayList<>();
 
