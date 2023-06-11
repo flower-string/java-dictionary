@@ -2,6 +2,7 @@ package org.example.utils;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -16,10 +17,28 @@ public class SceneManager extends JFrame {
 
     private JPanel activeScene = null;
     private SceneManager() {
-        super("flatlaf 单词本");
+        super("flatlaf 英汉词典");
         FlatLightLaf.setup();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 900);
+        setSize(900, 700);
+
+        // 读取并设置图标
+        ImageIcon icon = new ImageIcon("src/main/java/org/example/icon.png");
+        Image image = icon.getImage();
+        setIconImage(image);
+
+        // 设置任务栏图标
+        if (SystemTray.isSupported()) {
+            SystemTray tray = SystemTray.getSystemTray();
+            Image trayIcon = new ImageIcon("src/main/java/org/example/icon.png").getImage();
+            TrayIcon trayIconObj = new TrayIcon(trayIcon, "flatlaf 英汉词典");
+            trayIconObj.setImageAutoSize(true);
+            try {
+                tray.add(trayIconObj);
+            } catch (AWTException e) {
+                throw new RuntimeException(e);
+            }
+        }
         setVisible(true);
     }
 

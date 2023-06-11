@@ -15,7 +15,7 @@ import static org.example.utils.Theme.InitGlobalFont;
  * version 1.0.0
  **/
 // 程序入口
-public class Main extends JFrame {
+public class Main {
     public Main() {
         // 统一设置字体
         InitGlobalFont(new Font("alias", Font.PLAIN, 22));

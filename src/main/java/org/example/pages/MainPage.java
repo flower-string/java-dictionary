@@ -165,9 +165,13 @@ public class MainPage extends JPanel {
         });
         buttonPanel.add(searchButton);
 
-        JButton newSearchButton = new JButton("网络查询");
-        newSearchButton.addActionListener(e -> {
+        JButton webSearchButton = new JButton("联网查询");
+        webSearchButton.addActionListener(e -> {
             try {
+                if(searchField.getText().trim().isEmpty()) {
+                    System.out.println("查询词不能为空");
+                    return;
+                }
                 String result = YouDao.getInstance().translate(searchField.getText(), "英文", "中文");
                 JSONObject jsonObject = JSONObject.parseObject(result);
 
@@ -206,7 +210,7 @@ public class MainPage extends JPanel {
                 System.out.println("查询失败");
             }
         });
-        buttonPanel.add(newSearchButton);
+        buttonPanel.add(webSearchButton);
         wordListArea = new JPanel();
         wordListArea.setLayout(new BoxLayout(wordListArea, BoxLayout.Y_AXIS));
 

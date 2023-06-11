@@ -26,15 +26,15 @@ public class WordDialog extends JDialog {
         this.add(inputPanel, BorderLayout.CENTER);
         // 添加标签和输入框
         inputPanel.add(new JLabel("单词："));
-        wordField = new JTextField(word.word);
+        wordField = new JTextField(word.word, 10);
         inputPanel.add(wordField);
 
         inputPanel.add(new JLabel("词性："));
-        partOfSpeechField = new JTextField(word.getPartOfSpeech());
+        partOfSpeechField = new JTextField(word.getPartOfSpeech(), 10);
         inputPanel.add(partOfSpeechField);
 
         inputPanel.add(new JLabel("释义："));
-        definitionField = new JTextField(word.getDefinition());
+        definitionField = new JTextField(word.getDefinition(), 10);
         inputPanel.add(definitionField);
 
         // 创建一个面板，用于放置按钮

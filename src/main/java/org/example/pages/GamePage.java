@@ -12,75 +12,158 @@ import org.example.utils.WordRender;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-// 小游戏界面
+//class SoundUtils {
+//    public static void playSound(String soundFile) {
+//        try {
+//            // Open an audio input stream.
+//            URL url = SoundUtils.class.getResource("src\\main\\java\\org\\example\\" + soundFile);
+//            AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+//
+//            // Get a sound clip resource.
+//            Clip = AudioSystem.getClip();
+//
+//            // Open audio clip and load samples from the audio input stream.
+//            clip.open(audioIn);
+//            clip.start();
+//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//}
+
 public class GamePage extends JPanel {
     private JLabel wordLabel;
     private JTextField inputField;
     private String currentWord;
     private List<Word> vocabulary;
+    private int score;
+    private final JLabel scoreLabel;
 
     public GamePage() {
         setLayout(new BorderLayout());
+        score = 0;
+        wordLabel = new JLabel();
+        scoreLabel = new JLabel("Score: " + score);
     }
 
     @Override
     public void show() {
-        this.display();
-        this.vocabulary = WordRender.readVocabulary(Cache.username, "cet");
-        // 显示随机单词
-        showRandomWord();
+        this.start();
+    }
+
+    public void start() {
+        try {
+            // Load vocabulary from a file or database
+            display();
+            vocabulary = WordRender.readVocabulary(Cache.username, "cet");
+
+            // Display a random word
+            showRandomWord();
+//            SoundUtils.playSound("bg.mp3");
+        } catch (Exception e) {
+            // Handle any exceptions that may occur
+            e.printStackTrace();
+        }
     }
 
     private void showRandomWord() {
-        // 避免多线程下的竞争关系
-        int index = ThreadLocalRandom.current().nextInt(vocabulary.size());
-        currentWord = vocabulary.get(index).word;
-        wordLabel.setText(vocabulary.get(index).definition);
+        // Check if wordLabel is null to avoid NullPointerException
+        if (wordLabel != null) {
+            try {
+                // Avoid race conditions in multithreaded environments
+                int index = (int) (Math.random() * vocabulary.size());
+                currentWord = vocabulary.get(index).word;
+                wordLabel.setText(vocabulary.get(index).definition);
+            } catch (Exception e) {
+                // Handle any exceptions that may occur
+                e.printStackTrace();
+            }
+        }
     }
 
     private void checkSpelling() {
         String userInput = inputField.getText();
-        // 忽略用户输入的大小写
+
+        // Ignore case sensitivity
         if (userInput.equalsIgnoreCase(currentWord)) {
             JOptionPane.showMessageDialog(this, "拼对了");
-            showRandomWord();
-            inputField.setText("");
+            score++;
         } else {
             JOptionPane.showMessageDialog(this, "拼错了");
         }
+
+        // Display a new word
+        showRandomWord();
+        inputField.setText("");
+        scoreLabel.setText("Score: " + score);
     }
 
     private void display() {
-        // 创建标签、文本框和按钮
-        JPanel above = new JPanel();
+        // Create labels, text fields, and buttons
+        JPanel above = new JPanel(new FlowLayout(FlowLayout.CENTER));
         wordLabel = new JLabel();
         above.add(wordLabel);
 
         inputField = new JTextField(10);
+        inputField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 
-        JPanel bottom = new JPanel();
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton checkButton = new JButton("Check");
-        JButton closeButton = new JButton("关闭");
         JButton nextButton = new JButton("下一个");
-        bottom.add(closeButton);
+        JButton closeButton = new JButton("关闭");
         bottom.add(checkButton);
         bottom.add(nextButton);
+        bottom.add(closeButton);
 
-        // 添加组件到窗口
+        // Create score panel
+        JPanel scorePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JLabel scoreLabel = new JLabel("Score:");
+        JLabel scoreValueLabel = new JLabel(Integer.toString(score));
+        scorePanel.add(scoreLabel);
+        scorePanel.add(scoreValueLabel);
+
+        checkButton.addActionListener(e -> {
+//                SoundUtils.playSound("button_click.wav");
+            checkSpelling();
+        });
+
+        nextButton.addActionListener(e -> {
+//                SoundUtils.playSound("button_click.wav");
+            showRandomWord();
+        });
+
+        closeButton.addActionListener(e -> SceneManager.getInstance().changeScene("main"));
+
+        // Add components to the window
+        JPanel center = new JPanel(new GridBagLayout());
+        center.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(20, 20, 20, 20);
+        center.add(inputField, gbc);
+
+        gbc.gridy++;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        center.add(scorePanel, gbc);
+
         add(above, BorderLayout.NORTH);
-        add(inputField, BorderLayout.CENTER);
+        add(center, BorderLayout.WEST);
         add(bottom, BorderLayout.SOUTH);
 
-        // 为按钮添加事件监听器
+        // Add event listeners to the buttons
         checkButton.addActionListener(e -> checkSpelling());
-        nextButton.addActionListener(e -> {
-            showRandomWord();
-            inputField.setText("");
-        });
-        closeButton.addActionListener(e -> SceneManager.getInstance().changeScene("main"));
-    }
+        nextButton.addActionListener(e -> showRandomWord());
 
+        // Update score label
+        scoreValueLabel.setText(Integer.toString(score));
+    }
 }
