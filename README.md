@@ -14,13 +14,13 @@ admin下有测试时创建的各种单词本
 # 项目分工
 ## 刘敬超
 1. 项目设计
-2. 编写LoginPage类、VocabularyBookpanel类和Main类
+2. LoginPage、SceneManager、Theme、ThemeComboBox、YouDao、Cache
 ## 陈云云
-1. Word类、WordDialog类和Bookhandler类
+1. MainPage、WordDialog、WordPanel
 2. 后期测试
 ## 相欣雨
 1. 寻找单词本素材
-2. TxtConverter类和VocabularyGame类
+2. TxtConverter、BookHandler、WordReader、GamePage、Word
 
 
 # 更新日志

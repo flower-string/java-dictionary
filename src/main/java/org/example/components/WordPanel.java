@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * author 2107090411 刘敬超
+ * author 陈云云
  * version 1.0.0
  **/
 public class WordPanel extends JPanel {

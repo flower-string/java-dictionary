@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Objects;
-
+/**
+ * author 2107090411 相欣雨
+ * version 1.0.0
+ **/
 // 用于操作单词本
 public class BookHandler {
     public static void loadBooks(String username) {

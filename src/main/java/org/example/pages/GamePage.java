@@ -1,9 +1,5 @@
 package org.example.pages;
 
-/**
- * author 2107090411 刘敬超
- * version 1.0.0
- **/
 
 import org.example.components.Word;
 import org.example.utils.Cache;
@@ -12,28 +8,11 @@ import org.example.utils.WordRender;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
-
-//class SoundUtils {
-//    public static void playSound(String soundFile) {
-//        try {
-//            // Open an audio input stream.
-//            URL url = SoundUtils.class.getResource("src\\main\\java\\org\\example\\" + soundFile);
-//            AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-//
-//            // Get a sound clip resource.
-//            Clip = AudioSystem.getClip();
-//
-//            // Open audio clip and load samples from the audio input stream.
-//            clip.open(audioIn);
-//            clip.start();
-//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//}
+/**
+ * 相欣雨
+ * version 1.0.0
+ **/
 
 public class GamePage extends JPanel {
     private JLabel wordLabel;

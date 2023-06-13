@@ -27,13 +27,11 @@ public class LoginPage extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel nameLabel = new JLabel("用户名");
-        nameLabel.setFont(new Font("宋体", Font.PLAIN, 24));
         add(nameLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
         usernameField = new JTextField(10);
-        usernameField.setFont(new Font("宋体", Font.PLAIN, 24));
         add(usernameField, gbc);
 
         JButton loginButton = new JButton("登录");

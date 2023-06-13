@@ -1,9 +1,6 @@
 package org.example.utils;
 
-/**
- * author 2107090411 刘敬超
- * version 1.0.0
- **/
+
 import org.example.components.Word;
 
 import java.io.BufferedReader;
@@ -11,7 +8,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * author 2107090411 相欣雨
+ * version 1.0.0
+ **/
 // 读取单词本的内容，返回一个单词列表
 public class WordRender {
     public static List<Word> readVocabulary(String username, String bookname) {

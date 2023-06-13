@@ -1,12 +1,12 @@
 package org.example.utils;
 
-/**
- * author 2107090411 刘敬超
- * version 1.0.0
- **/
+
 import java.io.*;
 import java.util.*;
-
+/**
+ * author 相欣雨
+ * version 1.0.0
+ **/
 // 修改文本格式
 public class TxtConverter {
     public static void main(String[] args) throws IOException {
