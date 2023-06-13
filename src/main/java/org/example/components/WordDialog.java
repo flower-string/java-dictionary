@@ -17,7 +17,9 @@ public class WordDialog extends JDialog {
     public JTextField partOfSpeechField;
     public JTextField definitionField;
     public WordDialog(String title, Word word) {
+        // 设置标题
         this.setTitle(title);
+        // 方向布局
         this.setLayout(new BorderLayout());
 
         // 创建一个面板，用于放置输入框和标签

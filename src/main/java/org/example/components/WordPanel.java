@@ -18,6 +18,7 @@ public class WordPanel extends JPanel {
     private final JButton deleteButton;
     public WordPanel(int width, Word word) {
         int wordPanelHeight = 50;
+        //  设置面板的高度固定
         this.setMinimumSize(new Dimension(width, wordPanelHeight));
         this.setMaximumSize(new Dimension(width, wordPanelHeight));
         this.setPreferredSize(new Dimension(width, wordPanelHeight));
@@ -51,6 +52,7 @@ public class WordPanel extends JPanel {
     }
 
     public void addBtn2(ActionListener listener) {
+        // 为删除按钮添加监听器
         this.deleteButton.addActionListener(listener);
     }
 }

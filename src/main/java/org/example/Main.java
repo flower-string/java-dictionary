@@ -8,7 +8,7 @@ import org.example.utils.SceneManager;
 import javax.swing.*;
 import java.awt.*;
 
-import static org.example.utils.Theme.InitGlobalFont;
+import static org.example.utils.Theme.initGlobalFont;
 
 /**
  * author 2107090411 刘敬超
@@ -18,13 +18,14 @@ import static org.example.utils.Theme.InitGlobalFont;
 public class Main {
     public Main() {
         // 统一设置字体
-        InitGlobalFont(new Font("alias", Font.PLAIN, 22));
+        initGlobalFont(new Font("alias", Font.PLAIN, 22));
 
         // 设置场景
         SceneManager sceneManager = SceneManager.getInstance();
         sceneManager.addScene("login", new LoginPage());
         sceneManager.addScene("main", new MainPage());
         sceneManager.addScene("game", new GamePage());
+        // 切换到登录页面
         sceneManager.changeScene("login");
     }
 

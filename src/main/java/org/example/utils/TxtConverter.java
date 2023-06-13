@@ -8,14 +8,18 @@ import java.util.*;
  * version 1.0.0
  **/
 // 修改文本格式
+/**
+
+ TxtConverter类，用于将输入文件中的内容转换为特定格式并写入输出文件中
+ */
 public class TxtConverter {
     public static void main(String[] args) throws IOException {
-        // Input file
+// 输入文件名
         String inputFileName = "C:\\Users\\Administrator\\Desktop\\java-课设\\dictionary\\src\\main\\java\\org\\example\\lib.txt";
-        // Output file
+// 输出文件名
         String outputFileName = "C:\\Users\\Administrator\\Desktop\\java-课设\\dictionary\\src\\main\\java\\org\\example\\cet.txt";
 
-        // Read input file
+        // 读取输入文件
         List<String> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
             String line;
@@ -24,7 +28,7 @@ public class TxtConverter {
             }
         }
 
-        // Process lines
+        // 处理每一行数据并将其转换为特定格式
         List<String> outputLines = new ArrayList<>();
         for (String line : lines) {
             String[] parts = line.split(" ");
@@ -32,7 +36,7 @@ public class TxtConverter {
             for (int i = 1; i < parts.length; i++) {
                 int dotIndex = parts[i].indexOf('.');
                 if (dotIndex == -1) {
-                    // Skip line if it does not have the expected format
+                    // 如果该行数据不符合特定格式，则忽略该行
                     continue;
                 }
                 String pos = parts[i].substring(0, dotIndex);
@@ -41,7 +45,7 @@ public class TxtConverter {
             }
         }
 
-        // Write output file
+        // 将转换后的数据写入输出文件
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
             for (String line : outputLines) {
                 writer.write(line);

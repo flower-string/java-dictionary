@@ -16,10 +16,12 @@ public class Word {
         this.definition = definition;
     }
 
+    // toString方法用于决定单词的展示效果
     public String toString() {
         return word + " (" + partOfSpeech + ") - " + definition;
     }
 
+    // 对应的get和set方法
     public String getWord() {
         return word;
     }

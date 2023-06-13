@@ -25,6 +25,7 @@ import java.util.ArrayList;
 public class MainPage extends JPanel {
     // 用于展示单词
     private JPanel wordListArea;
+
     private JComboBox<String> bookList;
 
     public MainPage() {
@@ -38,25 +39,35 @@ public class MainPage extends JPanel {
         updateWordList();
     }
 
+    //    更新单词面板的内容
     public void updateWordList() {
+// 先移除所有的内容
         wordListArea.removeAll();
+// 设置单词列表面板的布局方式为BorderLayout
         wordListArea.setLayout(new BorderLayout());
+// 创建用于显示单词的面板容器
         JPanel wordPanelContainer = new JPanel();
+// 设置面板容器的布局方式为BoxLayout，垂直方向
         wordPanelContainer.setLayout(new BoxLayout(wordPanelContainer, BoxLayout.Y_AXIS));
+// 创建滚动面板，将单词面板容器添加到其中
         JScrollPane scrollPane = new JScrollPane(wordPanelContainer, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+// 将滚动面板添加到单词列表面板的中心位置
         wordListArea.add(scrollPane, BorderLayout.CENTER);
+// 获取当前选中的单词本
         String selectedBook = (String) bookList.getSelectedItem();
         if (selectedBook != null) {
+// 遍历单词本中的单词，创建单词面板并添加到单词面板容器中
             for (Word word : Cache.books.get(selectedBook)) {
                 WordPanel wordPanel = new WordPanel(wordListArea.getWidth(), word);
                 wordPanelContainer.add(wordPanel);
-
+                // 为删除按钮添加监听器，用于删除单词
                 wordPanel.addBtn2(e -> {
                     Cache.books.get(selectedBook).remove(word);
                     updateWordList();
                 });
             }
         }
+// 重新计算并绘制单词列表面板
         revalidate();
         repaint();
     }
@@ -153,7 +164,7 @@ public class MainPage extends JPanel {
                     }
                     if (found) {
                         StringBuilder endStr = new StringBuilder();
-                        for(Word word: result) {
+                        for (Word word : result) {
                             endStr.append(word.toString()).append("\n");
                         }
                         JOptionPane.showMessageDialog(MainPage.this.getTopLevelAncestor(), "查询结果\n" + endStr);
@@ -168,7 +179,7 @@ public class MainPage extends JPanel {
         JButton webSearchButton = new JButton("联网查询");
         webSearchButton.addActionListener(e -> {
             try {
-                if(searchField.getText().trim().isEmpty()) {
+                if (searchField.getText().trim().isEmpty()) {
                     System.out.println("查询词不能为空");
                     return;
                 }

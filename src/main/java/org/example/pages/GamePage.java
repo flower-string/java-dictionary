@@ -22,6 +22,7 @@ public class GamePage extends JPanel {
     private int score;
     private final JLabel scoreLabel;
 
+    // 构造函数
     public GamePage() {
         setLayout(new BorderLayout());
         score = 0;
@@ -34,6 +35,7 @@ public class GamePage extends JPanel {
         this.start();
     }
 
+    // 开始游戏
     public void start() {
         try {
             // Load vocabulary from a file or database
@@ -49,6 +51,7 @@ public class GamePage extends JPanel {
         }
     }
 
+    // 随机抽取一个单词
     private void showRandomWord() {
         // Check if wordLabel is null to avoid NullPointerException
         if (wordLabel != null) {
@@ -67,7 +70,7 @@ public class GamePage extends JPanel {
     private void checkSpelling() {
         String userInput = inputField.getText();
 
-        // Ignore case sensitivity
+        // 检查拼写是否正确
         if (userInput.equalsIgnoreCase(currentWord)) {
             JOptionPane.showMessageDialog(this, "拼对了");
             score++;
@@ -75,72 +78,51 @@ public class GamePage extends JPanel {
             JOptionPane.showMessageDialog(this, "拼错了");
         }
 
-        // Display a new word
+        // 展示新的单词
         showRandomWord();
         inputField.setText("");
         scoreLabel.setText("Score: " + score);
     }
 
     private void display() {
-        // Create labels, text fields, and buttons
-        JPanel above = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        wordLabel = new JLabel();
-        above.add(wordLabel);
+// Create labels, text fields, and buttons
+        JPanel above = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton closeButton = new JButton("关闭");
+        JLabel scoreLabel = new JLabel("Score:");
+        JLabel scoreValueLabel = new JLabel(Integer.toString(score));
+        above.add(closeButton);
+        above.add(scoreLabel);
+        above.add(scoreValueLabel);
+
+        JPanel middle = new JPanel(new BorderLayout());
+        wordLabel = new JLabel("", SwingConstants.CENTER);
+        wordLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 50));
+        middle.add(wordLabel, BorderLayout.NORTH);
+
+        JPanel hintPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel hintLabel = new JLabel("请输入单词拼写：");
+        hintPanel.add(hintLabel);
+        middle.add(hintPanel, BorderLayout.CENTER);
 
         inputField = new JTextField(10);
         inputField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        middle.add(inputField, BorderLayout.SOUTH);
 
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton checkButton = new JButton("Check");
         JButton nextButton = new JButton("下一个");
-        JButton closeButton = new JButton("关闭");
         bottom.add(checkButton);
         bottom.add(nextButton);
-        bottom.add(closeButton);
-
-        // Create score panel
-        JPanel scorePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JLabel scoreLabel = new JLabel("Score:");
-        JLabel scoreValueLabel = new JLabel(Integer.toString(score));
-        scorePanel.add(scoreLabel);
-        scorePanel.add(scoreValueLabel);
-
-        checkButton.addActionListener(e -> {
-//                SoundUtils.playSound("button_click.wav");
-            checkSpelling();
-        });
-
-        nextButton.addActionListener(e -> {
-//                SoundUtils.playSound("button_click.wav");
-            showRandomWord();
-        });
-
-        closeButton.addActionListener(e -> SceneManager.getInstance().changeScene("main"));
 
         // Add components to the window
-        JPanel center = new JPanel(new GridBagLayout());
-        center.setBackground(Color.WHITE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(20, 20, 20, 20);
-        center.add(inputField, gbc);
-
-        gbc.gridy++;
-        gbc.weighty = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        center.add(scorePanel, gbc);
-
         add(above, BorderLayout.NORTH);
-        add(center, BorderLayout.WEST);
+        add(middle, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
 
         // Add event listeners to the buttons
         checkButton.addActionListener(e -> checkSpelling());
         nextButton.addActionListener(e -> showRandomWord());
+        closeButton.addActionListener(e -> SceneManager.getInstance().changeScene("main"));
 
         // Update score label
         scoreValueLabel.setText(Integer.toString(score));
